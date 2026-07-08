@@ -1,0 +1,964 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>유아임용 발달이론 말따먹기 퀴즈방</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts (Inter & Gothic) -->
+    <link href="https://fonts.googleapis.com/css2?family=Gaegu:wght@400;700&family=Noto+Sans+KR:wght@300;400;500;700;900&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Noto Sans KR', sans-serif;
+            background-color: #fcf8f2;
+        }
+        .font-gaegu {
+            font-family: 'Gaegu', sans-serif;
+        }
+        /* Custom scrollbar for beautiful dashboard lists */
+        ::-webkit-scrollbar {
+            width: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #f1f1f1;
+            border-radius: 10px;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #ffd8a8;
+            border-radius: 10px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #ffc078;
+        }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col text-slate-800">
+
+    <script>
+        // Quiz Data definition
+        const QUIZ_DATABASE = [
+            {
+                id: 1,
+                category: "피아제 인지발달이론",
+                question: "피아제의 인지발달 단계 중 '자기중심성', '직관적 사고', '물활론적 사고', '상징적 사고'가 나타나는 시기는 어느 단계인가요?",
+                options: ["감각운동기", "전조작기", "구체적 조작기", "형식적 조작기"],
+                answer: 1, // index of '전조작기'
+                mnemonic: "감 - 전 - 구 - 형",
+                mnemonicDetail: "감각운동기 -> 전조작기 -> 구체적 조작기 -> 형식적 조작기\n💡 앞글자를 따서 [감전된 구형]컴퓨터로 외우세요! 피아제 할아버지가 감전된 구형 컴퓨터를 고치고 계십니다.",
+                explanation: "전조작기(2~7세)는 상징적 언어를 사용하지만 아직 논리적 조작이 불가능하여 자기중심성, 물활론적 사고, 직관적 사고 등이 두드러지게 나타나는 단계입니다."
+            },
+            {
+                id: 2,
+                category: "에릭슨 심리사회적 이론",
+                question: "에릭슨의 심리사회적 발달 단계 중 유아기(3~6세)에 해당하는 발달 과업과 갈등으로 알맞은 것은 무엇인가요?",
+                options: ["신뢰감 대 불신감", "자율성 대 수치심", "주도성 대 죄책감", "근면성 대 열등감"],
+                answer: 2, // 주도성 대 죄책감
+                mnemonic: "신 - 자 - 주 - 근",
+                mnemonicDetail: "신뢰감 -> 자율성 -> 주도성 -> 근면성\n💡 [신]발 [자]크를 [주]우려다 [근]손실 왔다!\n영아기(신뢰감) -> 영유아기(자율성) -> 유아기(주도성) -> 아동기(근면성) 순서입니다.",
+                explanation: "유아기(3~6세)는 새로운 환경과 도전을 주도적으로 탐색하고자 하며, 실패하거나 꾸중을 들을 때 죄책감을 형성하게 됩니다."
+            },
+            {
+                id: 3,
+                category: "파트너 사회적 놀이",
+                question: "파트너(Parten)가 제시한 사회적 놀이 발달 단계 중, '동일한 놀이 영역에서 비슷한 장난감을 가지고 놀지만 서로 인터랙션이나 협동 없이 독립적으로 노는 단계'는 무엇인가요?",
+                options: ["연합 놀이", "평행 놀이", "단독 놀이", "협동 놀이"],
+                answer: 1, // 평행 놀이
+                mnemonic: "비 - 방 - 단 - 평 - 연 - 협",
+                mnemonicDetail: "비참여 행동 -> 방관자적 행동 -> 단독 놀이 -> 평행 놀이 -> 연합 놀이 -> 협동 놀이\n💡 [비]오는 날 [방]안에서 [단]둘이 [평]평한 [연]탄을 [협]찬받았다!\n놀이 수준이 사회적으로 정교화되는 완벽한 임용 필수 암기법입니다.",
+                explanation: "평행 놀이(Parallel Play)는 다른 영아 근처에서 같은 종류의 놀잇감으로 놀이하지만 교류를 나누지 않고 병행하여 활동하는 단계입니다."
+            },
+            {
+                id: 4,
+                category: "브론펜브레너 생태체계이론",
+                question: "유아가 속한 가정을 포함하여, 교사-학부모 관계 혹은 가정과 교육기관 간의 연계와 같이 '미시체계들 간의 상호관계'를 뜻하는 체계는 무엇인가요?",
+                options: ["미시체계", "중간체계", "외체계", "거시체계"],
+                answer: 1, // 중간체계
+                mnemonic: "미 - 중 - 외 - 거 - 시",
+                mnemonicDetail: "미시체계 -> 중간체계 -> 외체계 -> 거시체계 -> 시간체계\n💡 [미]소년 [중]국집 배달원 [외]모가 [거]의 [시]인 수준이다!\n가까운 곳에서 먼 곳으로 넓어지는 생태학적 환경망 체계입니다.",
+                explanation: "중간체계(Mesosystem)는 유아를 둘러싼 미시체계들(예: 가정과 유치원, 부모와 교사) 간의 관계를 포함합니다."
+            },
+            {
+                id: 5,
+                category: "프로이트 심리성적 이론",
+                question: "프로이트의 심리성적 발달 단계 순서로 올바른 것은 무엇인가요?",
+                options: [
+                    "구강기 - 남근기 - 항문기 - 잠복기 - 생식기",
+                    "구강기 - 항문기 - 남근기 - 잠복기 - 생식기",
+                    "항문기 - 구강기 - 남근기 - 생식기 - 잠복기",
+                    "구강기 - 남근기 - 잠복기 - 항문기 - 생식기"
+                ],
+                answer: 1, // 두번째 옵션
+                mnemonic: "구 - 항 - 남 - 잠 - 생",
+                mnemonicDetail: "구강기 -> 항문기 -> 남근기 -> 잠복기 -> 생식기\n💡 [구]구단 [항]상 외우다 [남]의 [잠]을 [생]각지도 않게 깨웠다!\n입(구강) -> 학문(항문) -> 성기(남근) -> 잠잠해짐(잠복) -> 사춘기(생식) 흐름을 기억하세요.",
+                explanation: "프로이트는 리비도(성적 에너지)가 집중되는 신체 부위에 따라 발달 단계를 구분하였습니다."
+            },
+            {
+                id: 6,
+                category: "볼비 애착발달단계",
+                question: "볼비(Bowlby)의 애착 형성 4단계 중, 유아가 주양육자를 구별하고 낯가림과 분리불안이 본격적으로 관찰되는 단계는 언제인가요?",
+                options: ["전애착 단계", "애착형성 단계", "명백한 애착 단계", "동반자 관계 형성 단계"],
+                answer: 2, // 명백한 애착 단계
+                mnemonic: "전 - 형 - 명 - 동",
+                mnemonicDetail: "전애착 -> 애착형성 -> 명백한 애착 -> 동반자 관계\n💡 [전]철 [형]님이 [명]품 [동]전을 주셨다!\n애착 단계의 흐름을 한눈에 암기할 수 있는 최고의 말따먹기입니다.",
+                explanation: "명백한 애착 단계(Clear-cut Attachment)는 약 6~8개월에서 2세경에 나타나며, 애착 대상에게 적극적으로 매달리고 격리 시 강한 불안을 느낍니다."
+            }
+        ];
+
+        // State variables
+        let currentTab = 'quiz'; // 'quiz', 'aimaker', 'dictionary', 'stats'
+        let quizIndex = 0;
+        let selectedOption = null;
+        let isSubmitted = false;
+        let userAnswers = []; // Array to store user's choices {quizId, isCorrect, userChoice}
+        let incorrectIds = JSON.parse(localStorage.getItem('ym_incorrect_ids') || '[]');
+        let bookmarks = JSON.parse(localStorage.getItem('ym_bookmarks') || '[]');
+        let customMnemonics = JSON.parse(localStorage.getItem('ym_custom_mnemonics') || '[]');
+
+        // Functions to manipulate state and storage
+        function saveIncorrectIds() {
+            localStorage.setItem('ym_incorrect_ids', JSON.stringify(incorrectIds));
+        }
+
+        function saveBookmarks() {
+            localStorage.setItem('ym_bookmarks', JSON.stringify(bookmarks));
+        }
+
+        function saveCustomMnemonics() {
+            localStorage.setItem('ym_custom_mnemonics', JSON.stringify(customMnemonics));
+        }
+    </script>
+
+    <!-- Header Navigation -->
+    <header class="bg-gradient-to-r from-amber-100 via-orange-100 to-peach-100 border-b border-orange-200/60 shadow-sm sticky top-0 z-40">
+        <div class="max-w-4xl mx-auto px-4 py-3 flex flex-col sm:flex-row items-center justify-between gap-3">
+            <div class="flex items-center gap-3">
+                <span class="text-3xl">🍊</span>
+                <div>
+                    <h1 class="text-xl sm:text-2xl font-bold text-orange-950 font-gaegu flex items-center gap-2">
+                        임용합격 말따먹기방
+                        <span class="text-xs font-sans font-bold bg-orange-500 text-white px-2 py-0.5 rounded-full uppercase tracking-wider">유아발달이론</span>
+                    </h1>
+                    <p class="text-[11px] sm:text-xs text-orange-800">합격까지 끝까지 암기하는 똑똑한 매일 학습 퀴즈</p>
+                </div>
+            </div>
+            <!-- Live Progress / D-Day Indicator -->
+            <div class="flex gap-2 text-xs">
+                <span class="bg-white/80 backdrop-blur border border-orange-200 px-3 py-1.5 rounded-full text-orange-900 font-semibold shadow-sm">
+                    ⏰ 임용 D-120
+                </span>
+                <span class="bg-amber-500 text-white px-3 py-1.5 rounded-full font-bold shadow-sm flex items-center gap-1">
+                    🎯 합격률 Up
+                </span>
+            </div>
+        </div>
+    </header>
+
+    <!-- Navigation Tabs -->
+    <div class="bg-white border-b border-slate-200 sticky top-[68px] sm:top-[61px] z-30 shadow-xs">
+        <div class="max-w-4xl mx-auto px-2 flex justify-around">
+            <button onclick="switchTab('quiz')" id="tab-quiz" class="flex-1 py-3 text-center border-b-2 font-bold transition-all text-sm flex flex-col sm:flex-row items-center justify-center gap-1 sm:gap-2">
+                <span class="text-base">📝</span>
+                <span>오늘의 퀴즈</span>
+            </button>
+            <button onclick="switchTab('aimaker')" id="tab-aimaker" class="flex-1 py-3 text-center border-b-2 font-bold transition-all text-sm flex flex-col sm:flex-row items-center justify-center gap-1 sm:gap-2 text-slate-500 border-transparent">
+                <span class="text-base">✨</span>
+                <span class="relative">AI 말따먹기기 <span class="absolute -top-1 -right-4 flex h-2 w-2"><span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-orange-400 opacity-75"></span><span class="relative inline-flex rounded-full h-2 w-2 bg-orange-500"></span></span></span>
+            </button>
+            <button onclick="switchTab('dictionary')" id="tab-dictionary" class="flex-1 py-3 text-center border-b-2 font-bold transition-all text-sm flex flex-col sm:flex-row items-center justify-center gap-1 sm:gap-2 text-slate-500 border-transparent">
+                <span class="text-base">📚</span>
+                <span>말따먹기 사전</span>
+            </button>
+            <button onclick="switchTab('stats')" id="tab-stats" class="flex-1 py-3 text-center border-b-2 font-bold transition-all text-sm flex flex-col sm:flex-row items-center justify-center gap-1 sm:gap-2 text-slate-500 border-transparent">
+                <span class="text-base">💯</span>
+                <span>오답 & 복습</span>
+            </button>
+        </div>
+    </div>
+
+    <!-- Main Content Container -->
+    <main class="flex-grow max-w-4xl w-full mx-auto p-4 md:py-6">
+        
+        <!-- ==================== TAB 1: TODAY'S QUIZ ==================== -->
+        <div id="panel-quiz" class="space-y-6">
+            <!-- Daily Quiz Card -->
+            <div class="bg-white rounded-2xl border border-orange-100 shadow-md p-5 sm:p-7 relative overflow-hidden">
+                <!-- Decorative background shapes -->
+                <div class="absolute -right-10 -top-10 w-32 h-32 bg-orange-100/50 rounded-full blur-xl pointer-events-none"></div>
+                <div class="absolute -left-10 -bottom-10 w-32 h-32 bg-amber-100/50 rounded-full blur-xl pointer-events-none"></div>
+
+                <!-- Quiz Progress bar -->
+                <div class="mb-5">
+                    <div class="flex justify-between items-center text-xs text-slate-500 mb-1">
+                        <span class="font-bold text-orange-600 bg-orange-50 px-2.5 py-0.5 rounded-full" id="quiz-category">로딩 중...</span>
+                        <span class="font-medium" id="quiz-progress-text">0 / 0 문항</span>
+                    </div>
+                    <div class="w-full bg-slate-100 h-2 rounded-full overflow-hidden">
+                        <div id="quiz-progress-bar" class="bg-orange-400 h-full transition-all duration-300" style="width: 0%"></div>
+                    </div>
+                </div>
+
+                <!-- Question Area -->
+                <div class="mb-6">
+                    <span class="text-sm font-bold text-orange-500/80 tracking-wide block mb-1">QUESTION</span>
+                    <h2 class="text-lg sm:text-xl font-bold text-slate-800 leading-relaxed" id="quiz-question">이론 문제를 불러오는 중입니다.</h2>
+                </div>
+
+                <!-- Multiple Choice Options -->
+                <div class="space-y-3 mb-6" id="quiz-options-container">
+                    <!-- Dynamic Options will be loaded here -->
+                </div>
+
+                <!-- Action Button Area -->
+                <div class="flex justify-between items-center gap-3">
+                    <button id="quiz-reset-btn" onclick="resetQuizProgress()" class="text-xs text-slate-400 hover:text-slate-600 underline font-medium transition">
+                        퀴즈 처음부터 다시 풀기
+                    </button>
+                    <button id="quiz-action-btn" onclick="handleQuizSubmit()" disabled class="px-6 py-3 bg-orange-400 hover:bg-orange-500 disabled:bg-slate-200 disabled:cursor-not-allowed text-white font-bold rounded-xl shadow-md transition-all flex items-center gap-2">
+                        <span>정답 확인하기</span>
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3" /></svg>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Mal-ttameok-gi feedback Card (Hidden until submitted) -->
+            <div id="feedback-card" class="hidden transform scale-95 transition-all duration-300 bg-amber-50/50 border-2 border-dashed border-amber-300 rounded-2xl p-5 sm:p-6">
+                <div class="flex items-start gap-4">
+                    <div class="p-3 bg-amber-100 rounded-xl text-3xl shrink-0" id="feedback-emoji">💡</div>
+                    <div class="space-y-2 w-full">
+                        <div class="flex justify-between items-center">
+                            <h3 class="text-base sm:text-lg font-bold text-amber-900" id="feedback-title">틀렸어도 걱정 없어요! 말따먹기로 암기!</h3>
+                            <button id="add-bookmark-btn" onclick="toggleCurrentBookmark()" class="text-xs font-bold text-orange-600 border border-orange-300 px-3 py-1 rounded-lg bg-white hover:bg-orange-50 transition flex items-center gap-1">
+                                <span id="bookmark-icon">⭐</span> <span id="bookmark-text">즐겨찾기 저장</span>
+                            </button>
+                        </div>
+                        
+                        <!-- The core Mnemonic Highlight -->
+                        <div class="bg-white border border-amber-200 p-4 rounded-xl shadow-xs">
+                            <span class="text-xs font-bold text-orange-500 uppercase block mb-1">핵심 암기 단어</span>
+                            <div class="text-2xl font-bold text-orange-600 font-gaegu tracking-wider mb-2" id="feedback-mnemonic">감-전-구-형</div>
+                            <p class="text-sm text-slate-700 whitespace-pre-line leading-relaxed" id="feedback-mnemonic-detail">상세 팁 내용...</p>
+                        </div>
+
+                        <!-- General explanation -->
+                        <details class="bg-amber-100/30 rounded-xl p-3 border border-amber-200/50">
+                            <summary class="text-xs font-bold text-slate-700 cursor-pointer focus:outline-none">정답 및 해설 더 보기</summary>
+                            <p class="text-xs text-slate-600 mt-2 leading-relaxed" id="feedback-explanation">상세 이론 해설이 출력됩니다.</p>
+                        </details>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ==================== TAB 2: AI MAL-TTAMEOCK-GI MAKER ==================== -->
+        <div id="panel-aimaker" class="hidden space-y-6">
+            <div class="bg-white rounded-2xl border border-orange-100 shadow-md p-5 sm:p-7">
+                <div class="flex items-center gap-3 mb-4">
+                    <div class="p-2.5 bg-orange-100 rounded-xl text-2xl">✨</div>
+                    <div>
+                        <h2 class="text-lg font-bold text-slate-800">AI 말따먹기 암기 비서</h2>
+                        <p class="text-xs text-slate-500">외우기 진짜 막막한 전공 단어들이 있나요? 키워드를 주시면 재치 있는 두문자어 스토리를 지어드려요!</p>
+                    </div>
+                </div>
+
+                <!-- Prompt inputs -->
+                <div class="space-y-4">
+                    <div>
+                        <label class="block text-xs font-bold text-slate-600 mb-2">암기하고 싶은 이론명 또는 학자명</label>
+                        <input type="text" id="ai-theory-name" placeholder="예: 가드너의 다중지능이론" class="w-full border border-slate-200 focus:border-orange-300 focus:ring-2 focus:ring-orange-100 rounded-xl p-3 text-sm focus:outline-none transition">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-bold text-slate-600 mb-2">꼭 외워야 하는 핵심 요소들 (쉼표로 구분해 주세요)</label>
+                        <textarea id="ai-keywords" rows="3" placeholder="예: 언어 지능, 논리수학 지능, 공간 지능, 신체운동 지능, 음악 지능, 대인관계 지능, 개인성찰 지능, 자연친화 지능" class="w-full border border-slate-200 focus:border-orange-300 focus:ring-2 focus:ring-orange-100 rounded-xl p-3 text-sm focus:outline-none transition resize-none"></textarea>
+                    </div>
+
+                    <!-- Generate Button -->
+                    <button id="ai-generate-btn" onclick="generateMnemonicWithAI()" class="w-full py-4 bg-gradient-to-r from-orange-400 to-amber-500 hover:from-orange-500 hover:to-amber-600 text-white font-bold rounded-xl shadow-md hover:shadow-lg transition-all flex items-center justify-center gap-2">
+                        <span>말따먹기 치트키 생성하기 🚀</span>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Loading Spinner (Hidden by default) -->
+            <div id="ai-loading" class="hidden flex flex-col items-center justify-center py-12 space-y-4 bg-white rounded-2xl border border-orange-100 shadow-md">
+                <div class="animate-spin rounded-full h-12 w-12 border-4 border-amber-500 border-t-transparent"></div>
+                <div class="text-center">
+                    <p class="text-sm font-bold text-slate-700">머리를 쥐어짜며 기발한 두문자 암기법을 개발하는 중...</p>
+                    <p class="text-[11px] text-orange-500 mt-1 font-medium">실제 유아임용 선배들만큼 창의적인 스토리를 구상 중이에요!</p>
+                </div>
+            </div>
+
+            <!-- AI Result Card (Hidden by default) -->
+            <div id="ai-result-card" class="hidden bg-white rounded-2xl border-2 border-orange-300 shadow-lg overflow-hidden">
+                <div class="bg-gradient-to-r from-amber-400 to-orange-400 px-6 py-4 text-white flex justify-between items-center">
+                    <h3 class="font-bold flex items-center gap-2 text-sm sm:text-base">
+                        <span>🎉 AI 추천 암기 공식 탄생!</span>
+                    </h3>
+                    <button onclick="saveAICustomMnemonic()" class="bg-white/20 hover:bg-white/30 text-white text-xs font-bold px-3 py-1.5 rounded-lg border border-white/50 transition">
+                        나만의 사전에 저장 📌
+                    </button>
+                </div>
+                <div class="p-5 sm:p-6 space-y-4">
+                    <!-- Core Phrase -->
+                    <div class="bg-orange-50/50 border border-orange-100 rounded-xl p-4 text-center">
+                        <span class="text-xs font-bold text-orange-500 tracking-wider">암기 슬로건</span>
+                        <div id="ai-mnemonic-phrase" class="text-2xl sm:text-3xl font-bold font-gaegu text-orange-600 mt-1 tracking-wider">언 - 논 - 공 - 신 - 음 - 대 - 개 - 자</div>
+                    </div>
+                    <!-- Detailed explanation -->
+                    <div class="space-y-3">
+                        <h4 class="text-xs font-bold text-slate-600">암기 스토리 & 꿀팁</h4>
+                        <p id="ai-mnemonic-story" class="text-sm text-slate-700 leading-relaxed whitespace-pre-line bg-slate-50 p-4 rounded-xl border border-slate-100">
+                            스토리 내용이 출력되는 공간...
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ==================== TAB 3: MNEMONIC DICTIONARY ==================== -->
+        <div id="panel-dictionary" class="hidden space-y-6">
+            <!-- Search & Control bar -->
+            <div class="bg-white rounded-2xl border border-orange-100 shadow-md p-4 flex flex-col sm:flex-row gap-3 items-center justify-between">
+                <div class="relative w-full sm:w-72">
+                    <input type="text" id="dict-search-input" oninput="renderDictionary()" placeholder="이론이나 학자 이름 검색..." class="w-full border border-slate-200 focus:border-orange-300 focus:ring-1 focus:ring-orange-200 rounded-xl py-2 px-4 text-sm focus:outline-none transition">
+                    <span class="absolute right-3.5 top-2.5 text-slate-400 text-sm">🔍</span>
+                </div>
+                <div class="flex gap-2 w-full sm:w-auto">
+                    <button onclick="filterDictionary('all')" id="filter-all" class="flex-1 sm:flex-initial text-xs font-bold px-3.5 py-2 rounded-xl border border-orange-200 bg-orange-400 text-white transition">
+                        전체 보기
+                    </button>
+                    <button onclick="filterDictionary('saved')" id="filter-saved" class="flex-1 sm:flex-initial text-xs font-bold px-3.5 py-2 rounded-xl border border-slate-200 text-slate-600 bg-white hover:bg-slate-50 transition">
+                        즐겨찾기 ⭐
+                    </button>
+                    <button onclick="filterDictionary('custom')" id="filter-custom" class="flex-1 sm:flex-initial text-xs font-bold px-3.5 py-2 rounded-xl border border-slate-200 text-slate-600 bg-white hover:bg-slate-50 transition">
+                        나만의 소장 📌
+                    </button>
+                </div>
+            </div>
+
+            <!-- Predefined Mnemonics and User Mnemonics -->
+            <div id="dictionary-grid" class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <!-- Cards will render here -->
+            </div>
+        </div>
+
+        <!-- ==================== TAB 4: WRONG ANSWERS & REVIEW ==================== -->
+        <div id="panel-stats" class="hidden space-y-6">
+            <!-- Session Stats Panel -->
+            <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                <div class="bg-white rounded-2xl border border-orange-100 shadow-md p-5 text-center">
+                    <span class="text-3xl">🔥</span>
+                    <h3 class="text-xs font-bold text-slate-500 mt-2">오늘 맞춘 문제 수</h3>
+                    <p class="text-2xl font-bold text-orange-600 mt-1" id="stats-correct">0개</p>
+                </div>
+                <div class="bg-white rounded-2xl border border-orange-100 shadow-md p-5 text-center">
+                    <span class="text-3xl">📝</span>
+                    <h3 class="text-xs font-bold text-slate-500 mt-2">오답 노하우 개수</h3>
+                    <p class="text-2xl font-bold text-amber-600 mt-1" id="stats-wrong">0개</p>
+                </div>
+                <div class="bg-white rounded-2xl border border-orange-100 shadow-md p-5 text-center">
+                    <span class="text-3xl">⭐</span>
+                    <h3 class="text-xs font-bold text-slate-500 mt-2">암기 카드 북마크</h3>
+                    <p class="text-2xl font-bold text-indigo-600 mt-1" id="stats-bookmarks">0개</p>
+                </div>
+            </div>
+
+            <!-- Detailed Wrong Answer Review list -->
+            <div class="bg-white rounded-2xl border border-orange-100 shadow-md p-5 sm:p-7">
+                <h2 class="text-lg font-bold text-slate-800 mb-4 flex items-center justify-between">
+                    <span>✍️ 오답으로 정복하는 이론들</span>
+                    <button onclick="clearIncorrectNotes()" class="text-xs font-medium text-slate-400 hover:text-red-500 transition underline">전체 비우기</button>
+                </h2>
+
+                <div id="incorrect-list-container" class="space-y-4">
+                    <!-- Dynamic list -->
+                </div>
+            </div>
+        </div>
+
+    </main>
+
+    <!-- FOOTER -->
+    <footer class="bg-slate-900 text-slate-400 py-8 border-t border-slate-800 mt-12 text-xs">
+        <div class="max-w-4xl mx-auto px-4 text-center space-y-2">
+            <p class="font-bold text-slate-300">🍑 유아임용 단기 합격을 진심으로 응원합니다! 🍑</p>
+            <p>본 퀴즈 시스템의 말따먹기 암기 공식은 유아임용고시생들의 실제 학습 노하우를 바탕으로 최적화되었습니다.</p>
+            <p class="text-[10px] text-slate-500">Copyright © 2026 Imyong-Malttameok. All Rights Reserved.</p>
+        </div>
+    </footer>
+
+    <script>
+        // Tab switching logic
+        function switchTab(tabId) {
+            currentTab = tabId;
+            
+            // Tab Buttons CSS
+            const tabs = ['quiz', 'aimaker', 'dictionary', 'stats'];
+            tabs.forEach(t => {
+                const btn = document.getElementById(`tab-${t}`);
+                if (t === tabId) {
+                    btn.classList.add('text-orange-500', 'border-orange-500');
+                    btn.classList.remove('text-slate-500', 'border-transparent');
+                } else {
+                    btn.classList.remove('text-orange-500', 'border-orange-500');
+                    btn.classList.add('text-slate-500', 'border-transparent');
+                }
+            });
+
+            // Panels toggle
+            document.getElementById('panel-quiz').classList.add('hidden');
+            document.getElementById('panel-aimaker').classList.add('hidden');
+            document.getElementById('panel-dictionary').classList.add('hidden');
+            document.getElementById('panel-stats').classList.add('hidden');
+
+            document.getElementById(`panel-${tabId}`).classList.remove('hidden');
+
+            // Tab-specific initialization
+            if (tabId === 'dictionary') {
+                renderDictionary();
+            } else if (tabId === 'stats') {
+                renderStats();
+            }
+        }
+
+        // ============================================
+        // tab 1: QUIZ ENGINE LOGIC
+        // ============================================
+        function loadQuiz() {
+            if (QUIZ_DATABASE.length === 0) return;
+            
+            // Check if user completed all
+            if (quizIndex >= QUIZ_DATABASE.length) {
+                renderQuizCompletion();
+                return;
+            }
+
+            const currentQuiz = QUIZ_DATABASE[quizIndex];
+            selectedOption = null;
+            isSubmitted = false;
+
+            // DOM Updates
+            document.getElementById('quiz-category').textContent = currentQuiz.category;
+            document.getElementById('quiz-progress-text').textContent = `${quizIndex + 1} / ${QUIZ_DATABASE.length} 문항`;
+            const percent = ((quizIndex) / QUIZ_DATABASE.length) * 100;
+            document.getElementById('quiz-progress-bar').style.width = `${percent}%`;
+
+            document.getElementById('quiz-question').textContent = currentQuiz.question;
+
+            // Render Options
+            const optionsContainer = document.getElementById('quiz-options-container');
+            optionsContainer.innerHTML = '';
+
+            currentQuiz.options.forEach((opt, idx) => {
+                const btn = document.createElement('button');
+                btn.id = `opt-btn-${idx}`;
+                btn.onclick = () => selectOption(idx);
+                btn.className = "w-full text-left p-4 rounded-xl border border-slate-200 hover:border-orange-300 hover:bg-orange-50/30 transition-all font-medium text-sm flex items-center justify-between group";
+                
+                // option number indicator
+                const numSpan = `<span class="inline-block w-6 h-6 rounded-full bg-slate-100 text-slate-600 font-bold text-xs text-center leading-6 mr-3 group-hover:bg-orange-200 group-hover:text-orange-700 shrink-0 transition-all">${idx+1}</span>`;
+                
+                btn.innerHTML = `
+                    <div class="flex items-center">
+                        ${numSpan}
+                        <span class="text-slate-700">${opt}</span>
+                    </div>
+                    <div class="option-check-icon hidden">
+                        <svg class="h-5 w-5 text-orange-500" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/></svg>
+                    </div>
+                `;
+                optionsContainer.appendChild(btn);
+            });
+
+            // Hide Feedback Card & reset Submit button
+            document.getElementById('feedback-card').classList.add('hidden');
+            const submitBtn = document.getElementById('quiz-action-btn');
+            submitBtn.disabled = true;
+            submitBtn.innerHTML = `
+                <span>정답 확인하기</span>
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3" /></svg>
+            `;
+            submitBtn.onclick = handleQuizSubmit;
+        }
+
+        function selectOption(index) {
+            if (isSubmitted) return;
+
+            // Deselect previous
+            if (selectedOption !== null) {
+                const prevBtn = document.getElementById(`opt-btn-${selectedOption}`);
+                if (prevBtn) {
+                    prevBtn.className = "w-full text-left p-4 rounded-xl border border-slate-200 hover:border-orange-300 hover:bg-orange-50/30 transition-all font-medium text-sm flex items-center justify-between group";
+                    prevBtn.querySelector('.option-check-icon').classList.add('hidden');
+                }
+            }
+
+            selectedOption = index;
+            const targetBtn = document.getElementById(`opt-btn-${index}`);
+            if (targetBtn) {
+                targetBtn.className = "w-full text-left p-4 rounded-xl border-2 border-orange-400 bg-orange-50 font-bold text-sm flex items-center justify-between transition-all";
+                targetBtn.querySelector('.option-check-icon').classList.remove('hidden');
+            }
+
+            document.getElementById('quiz-action-btn').disabled = false;
+        }
+
+        function handleQuizSubmit() {
+            if (selectedOption === null || isSubmitted) return;
+            isSubmitted = true;
+
+            const currentQuiz = QUIZ_DATABASE[quizIndex];
+            const isCorrect = (selectedOption === currentQuiz.answer);
+
+            // Record session progress
+            userAnswers.push({
+                quizId: currentQuiz.id,
+                isCorrect: isCorrect,
+                userChoice: selectedOption
+            });
+
+            // Store wrong answer for review tab if incorrect
+            if (!isCorrect) {
+                if (!incorrectIds.includes(currentQuiz.id)) {
+                    incorrectIds.push(currentQuiz.id);
+                    saveIncorrectIds();
+                }
+            }
+
+            // Stylize the choices to show real answers
+            currentQuiz.options.forEach((opt, idx) => {
+                const btn = document.getElementById(`opt-btn-${idx}`);
+                if (!btn) return;
+                
+                if (idx === currentQuiz.answer) {
+                    // Right answer style
+                    btn.className = "w-full text-left p-4 rounded-xl border-2 border-emerald-500 bg-emerald-50 font-bold text-sm flex items-center justify-between transition-all text-emerald-900";
+                    btn.querySelector('.option-check-icon').innerHTML = `<svg class="h-5 w-5 text-emerald-600" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/></svg>`;
+                    btn.querySelector('.option-check-icon').classList.remove('hidden');
+                } else if (idx === selectedOption) {
+                    // Wrong choice style
+                    btn.className = "w-full text-left p-4 rounded-xl border-2 border-rose-500 bg-rose-50 font-bold text-sm flex items-center justify-between transition-all text-rose-900";
+                    btn.querySelector('.option-check-icon').innerHTML = `<svg class="h-5 w-5 text-rose-600" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd"/></svg>`;
+                    btn.querySelector('.option-check-icon').classList.remove('hidden');
+                } else {
+                    btn.className = "w-full text-left p-4 rounded-xl border border-slate-200 text-slate-400 font-medium text-sm flex items-center justify-between opacity-50";
+                }
+            });
+
+            // Show feedback card
+            const feedbackCard = document.getElementById('feedback-card');
+            feedbackCard.classList.remove('hidden');
+            setTimeout(() => {
+                feedbackCard.classList.remove('scale-95');
+                feedbackCard.classList.add('scale-100');
+            }, 50);
+
+            if (isCorrect) {
+                document.getElementById('feedback-emoji').textContent = "🎉";
+                document.getElementById('feedback-title').innerHTML = `<span class="text-emerald-700">정답입니다! 훌륭해요!</span>`;
+            } else {
+                document.getElementById('feedback-emoji').textContent = "💡";
+                document.getElementById('feedback-title').innerHTML = `<span class="text-rose-700">아쉽지만 틀렸어요! '말따먹기' 꿀팁으로 정복합시다.</span>`;
+            }
+
+            document.getElementById('feedback-mnemonic').textContent = currentQuiz.mnemonic;
+            document.getElementById('feedback-mnemonic-detail').textContent = currentQuiz.mnemonicDetail;
+            document.getElementById('feedback-explanation').textContent = currentQuiz.explanation;
+
+            // Bookmark button update
+            updateBookmarkButtonState(currentQuiz.id);
+
+            // Change Submit Button to Next Button
+            const submitBtn = document.getElementById('quiz-action-btn');
+            submitBtn.innerHTML = `
+                <span>다음 문제로 가기</span>
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" /></svg>
+            `;
+            submitBtn.onclick = nextQuiz;
+        }
+
+        function nextQuiz() {
+            quizIndex++;
+            loadQuiz();
+        }
+
+        function resetQuizProgress() {
+            quizIndex = 0;
+            userAnswers = [];
+            loadQuiz();
+        }
+
+        function renderQuizCompletion() {
+            // Update progress bar to 100%
+            document.getElementById('quiz-progress-bar').style.width = `100%`;
+            document.getElementById('quiz-progress-text').textContent = `완료!`;
+
+            const optionsContainer = document.getElementById('quiz-options-container');
+            
+            const correctCount = userAnswers.filter(ans => ans.isCorrect).length;
+            const total = userAnswers.length;
+
+            document.getElementById('quiz-category').textContent = "학습 성취 완료";
+            document.getElementById('quiz-question').textContent = "오늘의 발달이론 퀴즈를 모두 마쳤습니다! 👏👏👏";
+
+            optionsContainer.innerHTML = `
+                <div class="bg-orange-50 border border-orange-200 rounded-2xl p-6 text-center space-y-4">
+                    <p class="text-3xl">🏆</p>
+                    <div class="space-y-1">
+                        <h3 class="text-lg font-bold text-orange-950">오늘의 스코어</h3>
+                        <p class="text-2xl font-black text-orange-600">${total}문제 중 ${correctCount}문제 완벽 정복!</p>
+                    </div>
+                    <p class="text-xs text-slate-500 leading-relaxed">
+                        틀린 문제들은 자동으로 <span class="font-bold text-orange-600">[오답 & 복습]</span> 탭에 수집되었습니다.<br>
+                        '말따먹기 암기 비법'을 통해 빈틈없이 암기하여 최종 합격까지 내 것으로 만들어보세요!
+                    </p>
+                    <div class="pt-3 flex gap-3 justify-center">
+                        <button onclick="resetQuizProgress()" class="bg-orange-500 text-white font-bold py-2.5 px-5 rounded-xl text-xs hover:bg-orange-600 shadow transition-all">
+                            한 번 더 풀어보기
+                        </button>
+                        <button onclick="switchTab('stats')" class="bg-white border border-orange-200 text-orange-700 font-bold py-2.5 px-5 rounded-xl text-xs hover:bg-orange-50 shadow-xs transition-all">
+                            오답노트 보러가기
+                        </button>
+                    </div>
+                </div>
+            `;
+
+            // Hide action button areas
+            document.getElementById('feedback-card').classList.add('hidden');
+            document.getElementById('quiz-action-btn').disabled = true;
+            document.getElementById('quiz-action-btn').innerHTML = `<span>종료됨</span>`;
+        }
+
+        // Bookmark function
+        function updateBookmarkButtonState(id) {
+            const isBookmarked = bookmarks.includes(id);
+            const icon = document.getElementById('bookmark-icon');
+            const text = document.getElementById('bookmark-text');
+            if (isBookmarked) {
+                icon.textContent = "⭐";
+                text.textContent = "북마크 해제";
+            } else {
+                icon.textContent = "☆";
+                text.textContent = "말따먹기 북마크";
+            }
+        }
+
+        function toggleCurrentBookmark() {
+            const currentQuiz = QUIZ_DATABASE[quizIndex];
+            if (!currentQuiz) return;
+
+            const bIndex = bookmarks.indexOf(currentQuiz.id);
+            if (bIndex > -1) {
+                bookmarks.splice(bIndex, 1);
+            } else {
+                bookmarks.push(currentQuiz.id);
+            }
+            saveBookmarks();
+            updateBookmarkButtonState(currentQuiz.id);
+        }
+
+        // ============================================
+        // tab 2: AI MNEMONIC GENERATOR
+        // ============================================
+        async function generateMnemonicWithAI() {
+            const theoryName = document.getElementById('ai-theory-name').value.trim();
+            const keywords = document.getElementById('ai-keywords').value.trim();
+
+            if (!theoryName || !keywords) {
+                alert("이론명과 핵심 암기 요소들을 채워주세요!");
+                return;
+            }
+
+            // Show loading, hide result
+            document.getElementById('ai-loading').classList.remove('hidden');
+            document.getElementById('ai-result-card').classList.add('hidden');
+            document.getElementById('ai-generate-btn').disabled = true;
+
+            const systemPrompt = `당신은 대한민국 유아임용고시생들의 멘토이자 암기 마법사입니다. 
+제공된 유아임용 발달이론 핵심 키워드 목록을 암기하기 쉽도록, 첫 글자 등을 따서 재미있고 직관적인 '말따먹기 암기법(두문자어/Mnemonic)'을 제작해주어야 합니다. 
+조건:
+1. 한국어 발음에 적합하고 귀에 쏙 들어오는 유머러스한 한 문장 암기 슬로건을 지어주세요.
+2. 각 요소가 어떻게 매칭되는지 알기 쉽고 위트 있게 '암기 스토리'를 풀어서 제공해주세요.
+3. 대한민국 임용고시생들에게 공감을 줄 수 있는 화법(예: 임고생 파이팅, ~하세요!)을 사용해주세요.
+4. JSON 형식으로 즉시 파싱하여 웹에 그릴 수 있도록 다음 Schema에 딱 맞추어 오직 JSON만 반환해 주십시오:
+{
+  "phrase": "암기 단어들의 머리글자를 나열한 핵심 줄임말 (예: 미-중-외-거-시)",
+  "story": "재치 있는 암기 슬로건 문장과 자세한 꿀팁 스토리 (각 단어가 어떻게 매칭되는지도 친절하게 서술)"
+}`;
+
+            const userPrompt = `이론 이름: ${theoryName}\n핵심 암기 단어 목록: ${keywords}`;
+            
+            // Calling actual gemini-3-flash-preview model (or using mock/backup strategy on connection fail)
+            try {
+                const apiKey = ""; // Canvas sandbox provides runtime key injection
+                const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-3-flash-preview:generateContent?key=${apiKey}`;
+
+                const payload = {
+                    contents: [{ parts: [{ text: userPrompt }] }],
+                    generationConfig: {
+                        responseMimeType: "application/json",
+                        responseSchema: {
+                            type: "OBJECT",
+                            properties: {
+                                "phrase": { "type": "STRING" },
+                                "story": { "type": "STRING" }
+                            },
+                            "required": ["phrase", "story"]
+                        }
+                    },
+                    systemInstruction: {
+                        parts: [{ text: systemPrompt }]
+                    }
+                };
+
+                // Exponential backoff fetch implementation
+                let response;
+                let delay = 1000;
+                for (let i = 0; i < 3; i++) {
+                    try {
+                        response = await fetch(apiUrl, {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify(payload)
+                        });
+                        if (response.ok) break;
+                    } catch (e) {
+                        if (i === 2) throw e;
+                    }
+                    await new Promise(resolve => setTimeout(resolve, delay));
+                    delay *= 2;
+                }
+
+                if (!response || !response.ok) {
+                    throw new Error("API call failed");
+                }
+
+                const result = await response.json();
+                const jsonText = result.candidates?.[0]?.content?.parts?.[0]?.text;
+                const parsed = JSON.parse(jsonText);
+
+                // Update UI with generated result
+                document.getElementById('ai-mnemonic-phrase').textContent = parsed.phrase;
+                document.getElementById('ai-mnemonic-story').textContent = parsed.story;
+                document.getElementById('ai-result-card').classList.remove('hidden');
+
+            } catch (err) {
+                console.error("Gemini API call failed, generating locally.", err);
+                
+                // Fallback Generator: Smart client-side text manipulation in case API fails
+                const words = keywords.split(',').map(w => w.trim());
+                const initialSyllables = words.map(w => w[0] || '').join(' - ');
+                const storyFallback = `💡 [서버 로딩 초과 시 활성화되는 수동 암기법]\n📌 이론: ${theoryName}\n🧩 앞글자 공식: ${initialSyllables}\n\n유아임용 필수 개념인 [${words.join(', ')}]을 외우는 암기 팁입니다!\n순서대로 소리 내어 읽으면서 시험지에 그대로 그려보세요. "임용 합격은 반복 복습만이 지름길입니다!"`;
+
+                document.getElementById('ai-mnemonic-phrase').textContent = initialSyllables;
+                document.getElementById('ai-mnemonic-story').textContent = storyFallback;
+                document.getElementById('ai-result-card').classList.remove('hidden');
+            } finally {
+                document.getElementById('ai-loading').classList.add('hidden');
+                document.getElementById('ai-generate-btn').disabled = false;
+            }
+        }
+
+        function saveAICustomMnemonic() {
+            const theoryName = document.getElementById('ai-theory-name').value.trim();
+            const phrase = document.getElementById('ai-mnemonic-phrase').textContent;
+            const story = document.getElementById('ai-mnemonic-story').textContent;
+
+            const newItem = {
+                id: 'custom_' + Date.now(),
+                category: "사용자 커스텀",
+                question: `${theoryName}의 하위 요소를 암기해보세요.`,
+                options: [],
+                answer: null,
+                mnemonic: phrase,
+                mnemonicDetail: story,
+                explanation: `${theoryName} 전공 학습 암기 카드입니다.`
+            };
+
+            customMnemonics.push(newItem);
+            saveCustomMnemonics();
+            alert("나만의 사전에 암기 치트키가 추가되었습니다! [말따먹기 사전]의 '나만의 소장' 필터에서 찾아보세요. 😊");
+        }
+
+
+        // ============================================
+        // tab 3: MNEMONIC DICTIONARY
+        // ============================================
+        let currentFilter = 'all'; // 'all', 'saved', 'custom'
+
+        function filterDictionary(filter) {
+            currentFilter = filter;
+            
+            // Style filter buttons
+            const filters = ['all', 'saved', 'custom'];
+            filters.forEach(f => {
+                const btn = document.getElementById(`filter-${f}`);
+                if (f === filter) {
+                    btn.className = "flex-1 sm:flex-initial text-xs font-bold px-3.5 py-2 rounded-xl border border-orange-200 bg-orange-400 text-white transition";
+                } else {
+                    btn.className = "flex-1 sm:flex-initial text-xs font-bold px-3.5 py-2 rounded-xl border border-slate-200 text-slate-600 bg-white hover:bg-slate-50 transition";
+                }
+            });
+
+            renderDictionary();
+        }
+
+        function renderDictionary() {
+            const grid = document.getElementById('dictionary-grid');
+            const searchVal = document.getElementById('dict-search-input').value.toLowerCase();
+            grid.innerHTML = '';
+
+            // Merge Predefined and Custom mnemonics
+            const combinedList = [...QUIZ_DATABASE, ...customMnemonics];
+
+            // Filter logic
+            const filtered = combinedList.filter(item => {
+                // Search keyword match
+                const matchSearch = item.category.toLowerCase().includes(searchVal) || 
+                                    item.mnemonic.toLowerCase().includes(searchVal) ||
+                                    item.mnemonicDetail.toLowerCase().includes(searchVal);
+
+                if (!matchSearch) return false;
+
+                // Tab Filter match
+                if (currentFilter === 'saved') {
+                    return bookmarks.includes(item.id);
+                } else if (currentFilter === 'custom') {
+                    return typeof item.id === 'string' && item.id.startsWith('custom_');
+                }
+                return true;
+            });
+
+            if (filtered.length === 0) {
+                grid.innerHTML = `
+                    <div class="col-span-full py-12 text-center text-slate-400">
+                        <p class="text-4xl mb-2">🎈</p>
+                        <p class="text-sm font-bold">검색하거나 저장된 말따먹기 암기가 없습니다.</p>
+                        <p class="text-xs text-slate-400 mt-1">퀴즈를 풀면서 즐겨찾기하거나, AI를 통해 기발한 공식을 만들어보세요!</p>
+                    </div>
+                `;
+                return;
+            }
+
+            filtered.forEach(item => {
+                const isSaved = bookmarks.includes(item.id);
+                const isCustom = typeof item.id === 'string' && item.id.startsWith('custom_');
+                
+                const card = document.createElement('div');
+                card.className = "bg-white border border-slate-200/80 rounded-2xl p-5 shadow-xs flex flex-col justify-between hover:shadow-md transition-all";
+                
+                card.innerHTML = `
+                    <div class="space-y-2.5">
+                        <div class="flex justify-between items-start">
+                            <span class="text-xs font-extrabold text-orange-600 bg-orange-50 px-2.5 py-0.5 rounded-full">${item.category}</span>
+                            <div class="flex gap-2">
+                                ${!isCustom ? `
+                                    <button onclick="toggleBookmark(${item.id})" class="text-lg hover:scale-115 transition">
+                                        ${isSaved ? '⭐' : '☆'}
+                                    </button>
+                                ` : `
+                                    <button onclick="deleteCustomMnemonic('${item.id}')" class="text-xs font-semibold text-rose-500 hover:underline">
+                                        삭제
+                                    </button>
+                                `}
+                            </div>
+                        </div>
+                        <h4 class="text-xl font-bold font-gaegu text-slate-800 tracking-wide bg-amber-50/50 p-2.5 rounded-xl border border-amber-100 text-center">${item.mnemonic}</h4>
+                        <p class="text-xs text-slate-600 leading-relaxed whitespace-pre-line">${item.mnemonicDetail}</p>
+                    </div>
+                `;
+                grid.appendChild(card);
+            });
+        }
+
+        function toggleBookmark(id) {
+            const bIndex = bookmarks.indexOf(id);
+            if (bIndex > -1) {
+                bookmarks.splice(bIndex, 1);
+            } else {
+                bookmarks.push(id);
+            }
+            saveBookmarks();
+            renderDictionary();
+        }
+
+        function deleteCustomMnemonic(id) {
+            if (confirm("이 말따먹기 암기 카드를 삭제하시겠습니까?")) {
+                customMnemonics = customMnemonics.filter(m => m.id !== id);
+                saveCustomMnemonics();
+                renderDictionary();
+            }
+        }
+
+
+        // ============================================
+        // tab 4: WRONG ANSWERS & STATS REVIEW
+        // ============================================
+        function renderStats() {
+            // Stats Counts
+            const totalCorrect = userAnswers.filter(ans => ans.isCorrect).length;
+            document.getElementById('stats-correct').textContent = `${totalCorrect}개`;
+            document.getElementById('stats-wrong').textContent = `${incorrectIds.length}개`;
+            document.getElementById('stats-bookmarks').textContent = `${bookmarks.length}개`;
+
+            // Render Wrong Answers List
+            const container = document.getElementById('incorrect-list-container');
+            container.innerHTML = '';
+
+            if (incorrectIds.length === 0) {
+                container.innerHTML = `
+                    <div class="py-12 text-center text-slate-400">
+                        <p class="text-4xl mb-2">🌿</p>
+                        <p class="text-sm font-bold">오답 노트가 텅 비어 있습니다!</p>
+                        <p class="text-xs text-slate-400 mt-1">퀴즈를 열심히 풀어보고 틀린 문제들을 여기서 꼼꼼히 정리해 가세요.</p>
+                    </div>
+                `;
+                return;
+            }
+
+            // Draw cards for each incorrect questions
+            QUIZ_DATABASE.forEach(item => {
+                if (incorrectIds.includes(item.id)) {
+                    const card = document.createElement('div');
+                    card.className = "bg-white border-2 border-dashed border-orange-200/60 rounded-2xl p-5 relative overflow-hidden space-y-3";
+                    
+                    card.innerHTML = `
+                        <div class="flex justify-between items-start border-b border-slate-100 pb-2">
+                            <span class="text-xs font-bold text-rose-500 bg-rose-50 px-2 rounded-full">${item.category}</span>
+                            <button onclick="removeIncorrectNote(${item.id})" class="text-slate-400 hover:text-slate-600 text-xs transition underline">복습 완료(삭제)</button>
+                        </div>
+                        <p class="text-sm font-semibold text-slate-800 leading-relaxed">${item.question}</p>
+                        
+                        <div class="bg-amber-50/70 p-3.5 rounded-xl border border-amber-100">
+                            <span class="text-[10px] font-bold text-orange-600 block uppercase mb-1">말따먹기 암기 비법</span>
+                            <div class="text-lg font-bold font-gaegu text-orange-600 mb-1">${item.mnemonic}</div>
+                            <p class="text-xs text-slate-600 leading-relaxed whitespace-pre-line">${item.mnemonicDetail}</p>
+                        </div>
+                    `;
+                    container.appendChild(card);
+                }
+            });
+        }
+
+        function removeIncorrectNote(id) {
+            incorrectIds = incorrectIds.filter(val => val !== id);
+            saveIncorrectIds();
+            renderStats();
+        }
+
+        function clearIncorrectNotes() {
+            if (confirm("정말 모든 오답기록을 지우시겠습니까?")) {
+                incorrectIds = [];
+                saveIncorrectIds();
+                renderStats();
+            }
+        }
+
+
+        // Initialization on window load
+        window.onload = function () {
+            loadQuiz();
+        };
+    </script>
+</body>
+</html>
